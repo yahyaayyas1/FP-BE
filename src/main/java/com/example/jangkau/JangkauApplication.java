@@ -11,15 +11,4 @@ public class JangkauApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(JangkauApplication.class, args);
 	}
-
-
-}
-
-@RestController
-class HelloController {
-
-	@GetMapping("/hello")
-	public String hello() {
-		return "Hello, World!";
-	}
 }
