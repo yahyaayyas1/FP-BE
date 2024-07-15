@@ -24,7 +24,8 @@ public class Oauth2ResourceServerConfiguration extends ResourceServerConfigurerA
             "/swagger-resources/**",
             "/users/**",
             "/users",
-            "/"
+            "/api/**",
+            "/api"
     };
 
     /**
