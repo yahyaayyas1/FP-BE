@@ -1,5 +1,6 @@
 package com.example.jangkau.dto.auth;
 
+import com.example.jangkau.services.ValidPassword;
 import com.example.jangkau.services.ValidUsername;
 import lombok.Data;
 
@@ -11,5 +12,6 @@ public class LoginRequest {
     @ValidUsername
     private String username;
     @NotEmpty(message = "must not empty")
+//    @ValidPassword
     private String password;
 }
