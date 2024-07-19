@@ -47,14 +47,16 @@ public class DatabaseSeeder implements ApplicationRunner {
     @Autowired
     private AccountRepository accountRepository;
 
+    private String defaultPassword = "password";
+
     private String[] users = new String[]{
-            "admin@mail.com:Admin1:Admin1:Admin:+628123456789:ROLE_SUPERUSER ROLE_USER ROLE_ADMIN",
-            "Johndoe@mail.com:Johndoe123:Johndoe123:John Doe:+628987654321:ROLE_USER"
+            "admin@mail.com:Full Name Admin:+628123456789:ROLE_SUPERUSER ROLE_USER ROLE_ADMIN",
+            "user@mail.com:Full Name User:+628987654321:ROLE_USER"
     };
 
     private String[] clients = new String[]{
-            "my-client-apps:ROLE_READ ROLE_WRITE",
-            "my-client-web:ROLE_READ ROLE_WRITE"
+            "my-client-apps:ROLE_READ ROLE_WRITE", // mobile
+            "my-client-web:ROLE_READ ROLE_WRITE" // web
     };
 
     private String[] roles = new String[]{
@@ -64,13 +66,18 @@ public class DatabaseSeeder implements ApplicationRunner {
             "ROLE_READ:oauth_role:^/.*:GET|PUT|POST|PATCH|DELETE|OPTIONS",
             "ROLE_WRITE:oauth_role:^/.*:GET|PUT|POST|PATCH|DELETE|OPTIONS"
     };
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     @Override
     @Transactional
     public void run(ApplicationArguments applicationArguments) {
+        String password = encoder.encode(defaultPassword);
+
         this.insertRoles();
-        this.insertClients();
-        this.insertUsers();
+        this.insertClients(password);
+        this.insertUser(password);
     }
 
     @Transactional
@@ -101,12 +108,13 @@ public class DatabaseSeeder implements ApplicationRunner {
                     }
                 }
             }
+
             roleRepository.save(oldRole);
         }
     }
 
     @Transactional
-    public void insertClients() {
+    public void insertClients(String password) {
         for (String c : clients) {
             String[] s = c.split(":");
             String clientName = s[0];
@@ -118,7 +126,7 @@ public class DatabaseSeeder implements ApplicationRunner {
                 oldClient.setAccessTokenValiditySeconds(28800);
                 oldClient.setRefreshTokenValiditySeconds(7257600);
                 oldClient.setGrantTypes("password refresh_token authorization_code");
-                oldClient.setClientSecret(encoder.encode("password"));
+                oldClient.setClientSecret(password);
                 oldClient.setApproved(true);
                 oldClient.setRedirectUris("");
                 oldClient.setScopes("read write");
@@ -133,23 +141,21 @@ public class DatabaseSeeder implements ApplicationRunner {
     }
 
     @Transactional
-    public void insertUsers() {
+    public void insertUser(String password) {
         int i = 0;
         for (String userData : users) {
             String[] str = userData.split(":");
-            String emailAddress = str[0];
-            String username = str[1];
-            String password = str[2];
-            String fullName = str[3];
-            String phoneNumber = str[4];
-            String[] roleNames = str[5].split("\\s");
+            String username = str[0];
+            String fullName = str[1];
+            String phoneNumber = str[2];
+            String[] roleNames = str[3].split("\\s");
 
             User oldUser = userRepository.findByUsername(username);
             if (null == oldUser) {
                 oldUser = new User();
                 oldUser.setUsername(username);
-                oldUser.setEmailAddress(emailAddress);
-                oldUser.setPassword(encoder.encode(password));
+                oldUser.setEmailAddress(username);
+                oldUser.setPassword(password);
                 oldUser.setFullName(fullName);
                 oldUser.setPhoneNumber(phoneNumber);
                 List<Role> r = roleRepository.findByNameIn(roleNames);
@@ -157,7 +163,7 @@ public class DatabaseSeeder implements ApplicationRunner {
             }
 
             userRepository.save(oldUser);
-            insertAccounts(oldUser, oldUser.getFullName(), i);
+            //insertAccounts(oldUser, oldUser.getFullName(), i);
             i++;
         }
     }
@@ -172,7 +178,7 @@ public class DatabaseSeeder implements ApplicationRunner {
                     .ownerName(ownerName)
                     .balance(DummyResource.ACCOUNTS_BALANCE[i])
                     .build();
-            oldAccount.setPin(DummyResource.ACCOUNTS_PIN[i], encoder);
+            oldAccount.setPin(DummyResource.ACCOUNTS_PIN[i], passwordEncoder);
             accountRepository.save(oldAccount);
         }
     }

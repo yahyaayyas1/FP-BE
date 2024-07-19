@@ -45,7 +45,6 @@ public class AccountController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     private UserServiceImpl userServiceImpl;
 

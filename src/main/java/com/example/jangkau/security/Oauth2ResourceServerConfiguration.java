@@ -25,7 +25,10 @@ public class Oauth2ResourceServerConfiguration extends ResourceServerConfigurerA
             "/api/**",
             "/api",
             "/api-contract",
-            "/users/create",
+            "/transactions",
+            "/transactions/**",
+            "/bank-accounts",
+            "/saved-accounts/**"
     };
 
     /**
@@ -49,14 +52,7 @@ public class Oauth2ResourceServerConfiguration extends ResourceServerConfigurerA
                 .authorizeRequests()
                 .antMatchers(WHITE_LIST_URL)
                 .permitAll()
-                .antMatchers(HttpMethod.POST, "/transactions").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                .antMatchers(HttpMethod.POST, "/bank-accounts").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                .antMatchers(HttpMethod.POST, "/saved-accounts").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                .antMatchers(HttpMethod.GET, "/transactions").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                .antMatchers(HttpMethod.GET, "/bank-accounts").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                .antMatchers(HttpMethod.GET, "/saved-accounts").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .antMatchers(HttpMethod.PUT, "/users").hasAnyAuthority("ROLE_USER")
-                .antMatchers(HttpMethod.GET, "/users/{id}").hasAnyAuthority("ROLE_USER")
                 .antMatchers(HttpMethod.POST, "/users").hasAnyAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/users").hasAnyAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.GET, "/users").hasAnyAuthority("ROLE_ADMIN")

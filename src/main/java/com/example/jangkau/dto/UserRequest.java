@@ -1,7 +1,6 @@
 package com.example.jangkau.dto;
 
 import com.example.jangkau.services.ValidPassword;
-import com.example.jangkau.services.ValidUsername;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,6 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class UserRequest {
     @NotBlank(message = "Must not empty")
-    @ValidUsername
     private String username;
     @NotBlank(message = "Must not empty")
     private String emailAddress;
