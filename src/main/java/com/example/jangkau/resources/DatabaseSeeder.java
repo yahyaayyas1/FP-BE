@@ -47,7 +47,7 @@ public class DatabaseSeeder implements ApplicationRunner {
     @Autowired
     private AccountRepository accountRepository;
 
-    private String defaultPassword = "password";
+    private String defaultPassword = "Password@1";
 
     private String[] users = new String[]{
             "admin@mail.com:Full Name Admin:+628123456789:ROLE_SUPERUSER ROLE_USER ROLE_ADMIN",
