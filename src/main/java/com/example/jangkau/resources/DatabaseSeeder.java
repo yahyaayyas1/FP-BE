@@ -47,16 +47,16 @@ public class DatabaseSeeder implements ApplicationRunner {
     @Autowired
     private AccountRepository accountRepository;
 
-    private String defaultPassword = "Password@1";
+    private String defaultPassword = "password";
 
     private String[] users = new String[]{
-            "admin@mail.com:Full Name Admin:+628123456789:ROLE_SUPERUSER ROLE_USER ROLE_ADMIN",
-            "user@mail.com:Full Name User:+628987654321:ROLE_USER"
+            "admin@mail.com:Admin1:Full Name Admin:+628123456789:ROLE_SUPERUSER ROLE_USER ROLE_ADMIN",
+            "Johndoe@mail.com:Johndoe123:John Doe:+628987654321:ROLE_USER"
     };
 
     private String[] clients = new String[]{
-            "my-client-apps:ROLE_READ ROLE_WRITE", // mobile
-            "my-client-web:ROLE_READ ROLE_WRITE" // web
+            "my-client-apps:ROLE_READ ROLE_WRITE",
+            "my-client-web:ROLE_READ ROLE_WRITE"
     };
 
     private String[] roles = new String[]{
@@ -145,16 +145,17 @@ public class DatabaseSeeder implements ApplicationRunner {
         int i = 0;
         for (String userData : users) {
             String[] str = userData.split(":");
-            String username = str[0];
-            String fullName = str[1];
-            String phoneNumber = str[2];
-            String[] roleNames = str[3].split("\\s");
+            String emailAdress = str[0];
+            String username = str[1];
+            String fullName = str[2];
+            String phoneNumber = str[3];
+            String[] roleNames = str[4].split("\\s");
 
             User oldUser = userRepository.findByUsername(username);
             if (null == oldUser) {
                 oldUser = new User();
                 oldUser.setUsername(username);
-                oldUser.setEmailAddress(username);
+                oldUser.setEmailAddress(emailAdress);
                 oldUser.setPassword(password);
                 oldUser.setFullName(fullName);
                 oldUser.setPhoneNumber(phoneNumber);
