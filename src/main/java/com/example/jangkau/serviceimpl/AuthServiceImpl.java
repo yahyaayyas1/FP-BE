@@ -26,6 +26,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -34,11 +35,15 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.*;
 
 @Service
 public class AuthServiceImpl implements AuthService {
+
     @Autowired
     private UserRepository userRepository;
 
@@ -138,6 +143,15 @@ public class AuthServiceImpl implements AuthService {
             return authMapper.toLoginResponse(response);
         } else {
             throw new ResponseStatusException(response.getStatusCode(), "User not found");
+        }
+    }
+
+    @Override
+    public void logout(Principal principal) {
+        if (principal != null) {
+            SecurityContextHolder.clearContext();
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not logged in");
         }
     }
 
