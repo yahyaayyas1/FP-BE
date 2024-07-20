@@ -13,6 +13,7 @@ import javax.validation.constraints.NotEmpty;
 @NoArgsConstructor
 public class RegisterRequest {
     @NotEmpty(message = "must not empty")
+    @ValidUsername
     private String username;
     @NotEmpty(message = "must not empty")
     @Email
