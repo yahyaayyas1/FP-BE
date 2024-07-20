@@ -3,6 +3,7 @@ package com.example.jangkau.dto.auth;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.example.jangkau.services.ValidUsername;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
