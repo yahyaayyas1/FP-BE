@@ -140,11 +140,12 @@ public class AuthServiceImpl implements AuthService {
                 roles.add(role.getName());
             }
 
-            return authMapper.toLoginResponse(response);
+            return authMapper.toLoginResponse(response, user.getId());
         } else {
             throw new ResponseStatusException(response.getStatusCode(), "User not found");
         }
     }
+
 
     @Override
     public void logout(Principal principal) {

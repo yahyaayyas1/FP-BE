@@ -5,11 +5,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.UUID;
 
 @Component
 public class AuthMapper {
-    public LoginResponse toLoginResponse(ResponseEntity<Map> response) {
+    public LoginResponse toLoginResponse(ResponseEntity<Map> response, UUID userId) {
         return LoginResponse.builder()
+                .userId(userId)
                 .accessToken(response.getBody().get("access_token"))
                 .tokenType(response.getBody().get("token_type"))
                 .refreshToken(response.getBody().get("refresh_token"))

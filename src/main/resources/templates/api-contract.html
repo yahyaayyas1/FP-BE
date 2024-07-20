@@ -163,30 +163,30 @@
     </section>
 
     <section id="bank-accounts-user-id">
-        <h2>/api/bank-accounts/{user_id}</h2>
-            <p>Summary: Mendapatkan informasi bank account user berdasarkan User ID</p>
-            <p>Parameters:
-            <pre><code>{
+        <h2>/api/bank-accounts/user/{user_id}</h2>
+        <p>Summary: Mendapatkan informasi bank account user berdasarkan User ID</p>
+        <p>Parameters:
+        <pre><code>{
   "user_id": "string"
 }</code></pre>
-            </p>
-            <p>Responses:
-            <ul>
-                <li>200: Bank Account ditemukan.
-                    <pre><code>{
+        </p>
+        <p>Responses:
+        <ul>
+            <li>200: Bank Account ditemukan.
+                <pre><code>{
   "account_id": "45227600-27d1-45e7-ab80-31755f5737b0",
   "owner_name": "John Doe",
   "account_number": "8923445590",
   "balance": 5450567
 }</code></pre>
-                </li>
-                <li>404: Bank Account tidak ditemukan</li>
-            </ul>
-            </p>
+            </li>
+            <li>404: Bank Account tidak ditemukan</li>
+        </ul>
+        </p>
     </section>
 
     <section id="bank-accounts-account-number">
-        <h2>/api/bank-accounts/{account_number}</h2>
+        <h2>/api/bank-accounts/account/{account_number}</h2>
         <h3>GET</h3>
         <p>Summary: Mendapatkan informasi bank account user berdasarkan nomor rekening</p>
         <p>Parameters:
