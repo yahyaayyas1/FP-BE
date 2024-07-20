@@ -89,7 +89,7 @@ public class AuthServiceImpl implements AuthService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exist");
         }
         User user = new User();
-        user.setUsername(request.getUsername().toLowerCase());
+        user.setUsername(request.getUsername());
         user.setEmailAddress(request.getEmailAddress());
         user.setFullName(request.getFullName());
         user.setPhoneNumber(request.getPhoneNumber());
