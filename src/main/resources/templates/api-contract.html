@@ -93,6 +93,48 @@
         </p>
     </section>
 
+    <section id="register">
+        <h2>/api/auth/register</h2>
+        <h3>POST</h3>
+        <p>Summary: Mendaftarkan pengguna baru</p>
+        <p>Request Body:
+        <pre><code>{
+  "username" : "Johndoe123456",
+  "email_address" : "jhondeo@mail.com",
+  "password" : "Passw0rd123!",
+  "full_name" : "John Doe",
+  "phone_number" : "08223456766567"
+}</code></pre>
+        </p>
+        <p>Responses:
+        <ul>
+            <li>200: Registrasi Berhasil!
+                <pre><code>{
+  "code": 200,
+  "message": "Success Register User",
+  "status": true,
+  "data": {
+    "created_date": "2024-07-24T11:49:58.963+00:00",
+    "deleted_date": null,
+    "updated_date": "2024-07-24T11:49:58.963+00:00",
+    "id": "1befb9cc-5d9f-4c05-ab27-544cff1a1728",
+    "username": "Johndoe123456",
+    "email_address": "jhondeo@mail.com",
+    "full_name": "John Doe",
+    "phone_number": "08223456766567",
+    "otp": null,
+    "otp_expired_date": null,
+    "roles": [],
+    "saved_accounts": null,
+    "authorities": []
+  }
+}</code></pre>
+            </li>
+            <li>400: Bad Request</li>
+        </ul>
+        </p>
+    </section>
+
     <section id="bank-accounts-pin-validation">
         <h2>/api/bank-accounts/pin-validation</h2>
         <h3>POST</h3>
@@ -301,7 +343,7 @@
         <p>Summary: Mengirim email untuk reset password</p>
         <p>Request Body:
         <pre><code>{
-  "emailAddress": "johndoe@example.com"
+  "email_address": "johndoe@example.com"
 }</code></pre>
         </p>
         <p>Responses:
@@ -335,7 +377,7 @@
         <p>Summary: Reset password</p>
         <p>Request Body:
         <pre><code>{
-  "emailAddress": "johndoe@example.com",
+  "email_address": "johndoe@example.com",
   "otp": "123456",
   "newPassword": "NewPassword123!"
 }</code></pre>
