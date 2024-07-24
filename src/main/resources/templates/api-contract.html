@@ -348,7 +348,14 @@
         </p>
         <p>Responses:
         <ul>
-            <li>200: Email untuk reset password berhasil dikirim</li>
+            <li>200: Email untuk reset password berhasil dikirim
+                <pre><code>{
+  "code": 200,
+  "message": "Success Send OTP Forget Password",
+  "status": true,
+  "data": "Thanks, please check your email for activation."
+}</code></pre>
+            </li>
             <li>400: Bad Request</li>
         </ul>
         </p>
@@ -365,7 +372,14 @@
         </p>
         <p>Responses:
         <ul>
-            <li>200: OTP berhasil diverifikasi</li>
+            <li>200: OTP berhasil diverifikasi
+                <pre><code>{
+  "code": 200,
+  "message": "Success Validate OTP",
+  "status": true,
+  "data": "Success, Please Change New Password!"
+}</code></pre>
+            </li>
             <li>400: Bad Request</li>
         </ul>
         </p>
@@ -384,7 +398,14 @@
         </p>
         <p>Responses:
         <ul>
-            <li>200: Password berhasil direset</li>
+            <li>200: Password berhasil direset
+                <pre><code>{
+  "code": 200,
+  "message": "Success Reset Password",
+  "status": true,
+  "data": "Success Reset Password, Please login with your new password!"
+}</code></pre>
+            </li>
             <li>400: Bad Request</li>
         </ul>
         </p>
