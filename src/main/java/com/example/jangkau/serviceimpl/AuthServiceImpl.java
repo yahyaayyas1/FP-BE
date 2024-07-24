@@ -107,45 +107,6 @@ public class AuthServiceImpl implements AuthService {
         return userRepository.save(user);
     }
 
-//    public LoginResponse login(LoginRequest request) {
-//        validationService.validate(request);
-//        User checkUser = userRepository.findByUsername(request.getUsername());
-//
-//        if ((checkUser != null) && (encoder.matches(request.getPassword(), checkUser.getPassword()))) {
-//            if (!checkUser.isEnabled()) {
-//                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User is not enabled");
-//            }
-//        }
-//        if (checkUser == null) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-//        }
-//        if (!(encoder.matches(request.getPassword(), checkUser.getPassword()))) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong password");
-//        }
-//        String url = baseUrl + "/oauth/token?username=" + checkUser.getUsername() +
-//                "&password=" + request.getPassword() +
-//                "&grant_type=password" +
-//                "&client_id=my-client-web" +
-//                "&client_secret=password";
-//        ResponseEntity<Map> response = restTemplateBuilder.build().exchange(url, HttpMethod.POST, null, new
-//                ParameterizedTypeReference<Map>() {
-//                }
-//        );
-//
-//        if (response.getStatusCode() == HttpStatus.OK) {
-//            User user = userRepository.findByUsername(request.getUsername());
-//            List<String> roles = new ArrayList<>();
-//
-//            for (Role role : user.getRoles()) {
-//                roles.add(role.getName());
-//            }
-//
-//            return authMapper.toLoginResponse(response, user.getId());
-//        } else {
-//            throw new ResponseStatusException(response.getStatusCode(), "User not found");
-//        }
-//    }
-
     public LoginResponse login(LoginRequest request) {
         validationService.validate(request);
         User checkUser = userRepository.findByUsername(request.getUsername());
@@ -190,7 +151,8 @@ public class AuthServiceImpl implements AuthService {
         if (found == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Email Not Found");
         }
-        String template = subject.equalsIgnoreCase("Register") ? emailTemplate.getRegisterTemplate() : emailTemplate.getResetPassword();
+//        String template = subject.equalsIgnoreCase("Register") ? emailTemplate.getRegisterTemplate() : emailTemplate.getResetPassword();
+        String template = emailTemplate.getResetPassword();
         if (StringUtils.isEmpty(found.getOtp())) {
             User search;
             String otp;
