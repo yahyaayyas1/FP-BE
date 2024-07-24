@@ -273,12 +273,12 @@
     </section>
 
     <section id="saved-accounts">
-        <h2>/api/saved-accounts/{account-id}</h2>
+        <h2>/api/saved-accounts/{user-id}</h2>
         <h3>GET</h3>
         <p>Summary: Mendapatkan daftar semua bank account yang disimpan</p>
         <p>Parameters:
         <pre><code>{
-  "account-id": "string"
+  "user-id": "string"
 }</code></pre>
         </p>
         <p>Responses:
@@ -292,6 +292,86 @@
   }
 ]</code></pre>
             </li>
+        </ul>
+        </p>
+    </section>
+    <section id="forgot-password">
+        <h2>/api/auth/password</h2>
+        <h3>POST</h3>
+        <p>Summary: Mengirim email untuk reset password</p>
+        <p>Request Body:
+        <pre><code>{
+  "emailAddress": "johndoe@example.com"
+}</code></pre>
+        </p>
+        <p>Responses:
+        <ul>
+            <li>200: Email untuk reset password berhasil dikirim</li>
+            <li>400: Bad Request</li>
+        </ul>
+        </p>
+    </section>
+
+    <section id="verify-otp">
+        <h2>/api/auth/password/otp</h2>
+        <h3>POST</h3>
+        <p>Summary: Verifikasi OTP untuk reset password</p>
+        <p>Request Body:
+        <pre><code>{
+  "otp": "123456"
+}</code></pre>
+        </p>
+        <p>Responses:
+        <ul>
+            <li>200: OTP berhasil diverifikasi</li>
+            <li>400: Bad Request</li>
+        </ul>
+        </p>
+    </section>
+
+    <section id="reset-password">
+        <h2>/api/auth/password/reset</h2>
+        <h3>POST</h3>
+        <p>Summary: Reset password</p>
+        <p>Request Body:
+        <pre><code>{
+  "emailAddress": "johndoe@example.com",
+  "otp": "123456",
+  "newPassword": "NewPassword123!"
+}</code></pre>
+        </p>
+        <p>Responses:
+        <ul>
+            <li>200: Password berhasil direset</li>
+            <li>400: Bad Request</li>
+        </ul>
+        </p>
+    </section>
+    <section id="refresh-token">
+        <h2>/api/oauth/token</h2>
+        <h3>POST</h3>
+        <p>Summary: Mengambil akses token baru menggunakan refresh token</p>
+        <p>Request Body (x-www-form-urlencoded):
+        <pre><code>{
+  "grant_type": "refresh_token",
+  "client_id": "my-client-web/my-client-apps",
+  "client_secret": "password",
+  "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}</code></pre>
+        </p>
+        <p>Responses:
+        <ul>
+            <li>200: Token berhasil di-refresh.
+                <pre><code>{
+  "access_token": "newAccessToken",
+  "token_type": "bearer",
+  "refresh_token": "newRefreshToken",
+  "expires_in": 28799,
+  "scope": "read write",
+  "jti": "newJti"
+}</code></pre>
+            </li>
+            <li>400: Bad Request</li>
         </ul>
         </p>
     </section>

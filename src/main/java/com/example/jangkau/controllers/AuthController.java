@@ -4,11 +4,18 @@ import com.example.jangkau.dto.auth.*;
 import com.example.jangkau.dto.base.BaseResponse;
 import com.example.jangkau.services.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 
@@ -20,6 +27,9 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+    @Autowired
+    private TokenStore tokenStore;
+
     @PostMapping("register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         return ResponseEntity.ok(BaseResponse.success(authService.register(request), "Success Register User"));
@@ -28,12 +38,6 @@ public class AuthController {
     @PostMapping("login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(BaseResponse.success(authService.login(request), "Success Login User"));
-    }
-
-    @PostMapping("logout")
-    public ResponseEntity<?> logout(Principal principal) {
-        authService.logout(principal);
-        return ResponseEntity.ok(BaseResponse.success(null, "Success Logout User"));
     }
 
     @PostMapping("/otp")
