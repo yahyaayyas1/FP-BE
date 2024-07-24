@@ -79,19 +79,5 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         return services;
     }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/auth/logout").authenticated()
-                .and()
-                .logout()
-                .logoutUrl("/auth/logout")
-                .logoutSuccessUrl("/login")
-                .deleteCookies("JSESSIONID")
-                .invalidateHttpSession(true);
-    }
 }
 

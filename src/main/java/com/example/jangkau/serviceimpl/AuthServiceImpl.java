@@ -95,7 +95,7 @@ public class AuthServiceImpl implements AuthService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exist");
         }
         User user = new User();
-        user.setUsername(request.getUsername().toLowerCase());
+        user.setUsername(request.getUsername());
         user.setEmailAddress(request.getEmailAddress());
         user.setFullName(request.getFullName());
         user.setPhoneNumber(request.getPhoneNumber());
@@ -106,6 +106,45 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(password);
         return userRepository.save(user);
     }
+
+//    public LoginResponse login(LoginRequest request) {
+//        validationService.validate(request);
+//        User checkUser = userRepository.findByUsername(request.getUsername());
+//
+//        if ((checkUser != null) && (encoder.matches(request.getPassword(), checkUser.getPassword()))) {
+//            if (!checkUser.isEnabled()) {
+//                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User is not enabled");
+//            }
+//        }
+//        if (checkUser == null) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+//        }
+//        if (!(encoder.matches(request.getPassword(), checkUser.getPassword()))) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong password");
+//        }
+//        String url = baseUrl + "/oauth/token?username=" + checkUser.getUsername() +
+//                "&password=" + request.getPassword() +
+//                "&grant_type=password" +
+//                "&client_id=my-client-web" +
+//                "&client_secret=password";
+//        ResponseEntity<Map> response = restTemplateBuilder.build().exchange(url, HttpMethod.POST, null, new
+//                ParameterizedTypeReference<Map>() {
+//                }
+//        );
+//
+//        if (response.getStatusCode() == HttpStatus.OK) {
+//            User user = userRepository.findByUsername(request.getUsername());
+//            List<String> roles = new ArrayList<>();
+//
+//            for (Role role : user.getRoles()) {
+//                roles.add(role.getName());
+//            }
+//
+//            return authMapper.toLoginResponse(response, user.getId());
+//        } else {
+//            throw new ResponseStatusException(response.getStatusCode(), "User not found");
+//        }
+//    }
 
     public LoginResponse login(LoginRequest request) {
         validationService.validate(request);
@@ -122,6 +161,7 @@ public class AuthServiceImpl implements AuthService {
         if (!(encoder.matches(request.getPassword(), checkUser.getPassword()))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong password");
         }
+
         String url = baseUrl + "/oauth/token?username=" + checkUser.getUsername() +
                 "&password=" + request.getPassword() +
                 "&grant_type=password" +
@@ -133,28 +173,13 @@ public class AuthServiceImpl implements AuthService {
         );
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            User user = userRepository.findByUsername(request.getUsername());
-            List<String> roles = new ArrayList<>();
-
-            for (Role role : user.getRoles()) {
-                roles.add(role.getName());
-            }
-
-            return authMapper.toLoginResponse(response, user.getId());
+            return authMapper.toLoginResponse(response, checkUser);
         } else {
             throw new ResponseStatusException(response.getStatusCode(), "User not found");
         }
     }
 
 
-    @Override
-    public void logout(Principal principal) {
-        if (principal != null) {
-            SecurityContextHolder.clearContext();
-        } else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not logged in");
-        }
-    }
 
     @Override
     public Object sendEmailOtp(EmailRequest request, String subject) {

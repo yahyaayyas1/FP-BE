@@ -13,6 +13,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class LoginResponse {
     private UUID userId;
+    private String accountNumber;
     private Object accessToken;
     private Object tokenType;
     private Object refreshToken;
