@@ -51,7 +51,6 @@ public class OAuth2Sample {
                     + "into oauth2-cmdline-sample/src/main/resources/client_secrets.json");
             System.exit(1);
         }
-        // set up authorization code flow
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
                 httpTransport, JSON_FACTORY, clientSecrets, SCOPES).setDataStoreFactory(
                 dataStoreFactory).build();
