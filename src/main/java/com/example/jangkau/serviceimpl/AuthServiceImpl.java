@@ -9,6 +9,7 @@ import com.example.jangkau.mapper.AuthMapper;
 import com.example.jangkau.models.User;
 import com.example.jangkau.models.oauth2.Role;
 import com.example.jangkau.repositories.UserRepository;
+import com.example.jangkau.repositories.oauth2.ClientRepository;
 import com.example.jangkau.repositories.oauth2.RoleRepository;
 import com.example.jangkau.services.AuthService;
 import com.example.jangkau.services.ValidationService;
@@ -46,6 +47,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ClientRepository clientRepository;
 
     @Autowired
     private PasswordEncoder encoder;
@@ -134,12 +138,45 @@ public class AuthServiceImpl implements AuthService {
         );
 
         if (response.getStatusCode() == HttpStatus.OK) {
+            User user = userRepository.findByUsername(request.getUsername());
+            List<String> roles = new ArrayList<>();
+
+            for (Role role : user.getRoles()) {
+                roles.add(role.getName());
+            }
+
             return authMapper.toLoginResponse(response, checkUser);
         } else {
             throw new ResponseStatusException(response.getStatusCode(), "User not found");
         }
     }
 
+    @Override
+    public void logout(Principal principal) {
+        User user = userRepository.findByUsername(principal.getName());
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+
+        // Mengubah expired token menjadi 1 detik
+        String url = authUrl + "/oauth/token?token=" + user.getVerifyToken();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("client_id", "my-client-web");
+        params.add("client_secret", "password");
+        params.add("token", user.getVerifyToken());
+        params.add("token_type_hint", "access_token");
+
+        ResponseEntity<Void> response = restTemplateBuilder.build().postForEntity(url, params, Void.class);
+
+        if (response.getStatusCode() != HttpStatus.OK) {
+            throw new ResponseStatusException(response.getStatusCode(), "Logout failed");
+        }
+
+        user.setExpiredVerifyToken(new Date(System.currentTimeMillis() + 1000));
+        userRepository.save(user);
+
+        SecurityContextHolder.clearContext();
+    }
 
 
     @Override

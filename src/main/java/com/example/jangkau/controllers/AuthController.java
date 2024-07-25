@@ -4,19 +4,10 @@ import com.example.jangkau.dto.auth.*;
 import com.example.jangkau.dto.base.BaseResponse;
 import com.example.jangkau.services.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
-import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.io.IOException;
 import java.security.Principal;
 
 @Tag(name = "Auth")
@@ -27,10 +18,7 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @Autowired
-    private TokenStore tokenStore;
-
-    @PostMapping("register")
+    @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         return ResponseEntity.ok(BaseResponse.success(authService.register(request), "Success Register User"));
     }
