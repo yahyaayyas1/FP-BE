@@ -16,7 +16,7 @@ public interface ClientRepository extends JpaRepository<Client, Long>, JpaSpecif
 
     @Modifying
     @Transactional
-//    @Query("UPDATE Client c SET c.accessTokenValiditySeconds = :accessTokenValidity, c.refreshTokenValiditySeconds = :refreshTokenValidity WHERE c.clientId = :clientId")
+    @Query("UPDATE Client c SET c.accessTokenValiditySeconds = :accessTokenValidity, c.refreshTokenValiditySeconds = :refreshTokenValidity WHERE c.clientId = :clientId")
     void updateTokenValidity(String clientId, int accessTokenValidity, int refreshTokenValidity);
 }
 
