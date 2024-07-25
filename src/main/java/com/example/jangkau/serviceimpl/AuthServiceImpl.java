@@ -49,9 +49,6 @@ public class AuthServiceImpl implements AuthService {
     private UserRepository userRepository;
 
     @Autowired
-    private ClientRepository clientRepository;
-
-    @Autowired
     private PasswordEncoder encoder;
 
     @Autowired
@@ -138,13 +135,6 @@ public class AuthServiceImpl implements AuthService {
         );
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            User user = userRepository.findByUsername(request.getUsername());
-            List<String> roles = new ArrayList<>();
-
-            for (Role role : user.getRoles()) {
-                roles.add(role.getName());
-            }
-
             return authMapper.toLoginResponse(response, checkUser);
         } else {
             throw new ResponseStatusException(response.getStatusCode(), "User not found");
