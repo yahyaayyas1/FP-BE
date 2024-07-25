@@ -12,17 +12,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 
-@Tag(name = "Logout")
-@RestController
-@RequestMapping("/logout")
-public class LogoutController {
-
-    @Autowired
-    private AuthService authService;
-
-    @PutMapping()
-    public ResponseEntity<?> logout(Principal principal) {
-        authService.logout(principal);
-        return ResponseEntity.ok(BaseResponse.success(null, "Logout Successful"));
-    }
-}
+//@Tag(name = "Logout")
+//@RestController
+//@RequestMapping("/logout")
+//public class LogoutController {
+//
+////    @Autowired
+////    private AuthService authService;
+//
+////    @PutMapping()
+////    public ResponseEntity<?> logout(Principal principal) {
+////        authService.logout(principal);
+////        return ResponseEntity.ok(BaseResponse.success(null, "Logout Successful"));
+////    }
+////}

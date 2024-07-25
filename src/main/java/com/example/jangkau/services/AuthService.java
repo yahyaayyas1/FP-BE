@@ -13,7 +13,7 @@ public interface AuthService {
 
     LoginResponse login(LoginRequest request);
 
-    void logout(Principal principal);
+//    void logout(Principal principal);
 
     Object sendEmailOtp(EmailRequest request, String subject);
 
