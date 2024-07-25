@@ -81,9 +81,6 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private Config config;
 
-    @Autowired
-    private Oauth2UserDetailService userDetailsService;
-
     public User register(RegisterRequest request) {
         validationService.validate(request);
         String[] roleNames = {"ROLE_USER", "ROLE_READ", "ROLE_WRITE"}; // admin
@@ -148,7 +145,6 @@ public class AuthServiceImpl implements AuthService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
 
-        // Mengubah expired token menjadi 1 detik
         String url = authUrl + "/oauth/token?token=" + user.getVerifyToken();
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("client_id", "my-client-web");
