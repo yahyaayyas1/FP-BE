@@ -1,5 +1,6 @@
 package com.example.jangkau.dto.auth;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class LoginResponse {
     private String accountNumber;
     private Object accessToken;
     private Object tokenType;
+    @JsonIgnore
     private Object refreshToken;
     private Object expiresIn;
     private Object scope;
