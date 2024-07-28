@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 
 @Tag(name = "Auth")
@@ -23,10 +24,28 @@ public class AuthController {
         return ResponseEntity.ok(BaseResponse.success(authService.register(request), "Success Register User"));
     }
 
-    @PostMapping("login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        return ResponseEntity.ok(BaseResponse.success(authService.login(request), "Success Login User"));
+    @PostMapping("/login")
+    public ResponseEntity<BaseResponse<LoginResponse>> login(@RequestBody LoginRequest request, HttpServletResponse response) {
+        LoginResponse loginResponse = authService.login(request, response);
+        BaseResponse<LoginResponse> baseResponse = BaseResponse.success(loginResponse, "Success Login User");
+        return ResponseEntity.ok(baseResponse);
     }
+
+//    @PostMapping("/logout")
+//    public void logout(HttpServletRequest request, Authentication authentication) {
+//        String token = null;
+//        Enumeration<String> headers = request.getHeaders("Authorization");
+//        while (headers.hasMoreElements()) {
+//            String value = headers.nextElement();
+//            if ((value.toLowerCase().startsWith("bearer"))) {
+//                token = value.substring("bearer".length()).trim();
+//                OAuth2AccessToken oAuth2AccessToken = tokenStore.readAccessToken(token);
+//                if (oAuth2AccessToken != null) {
+//                    tokenStore.removeAccessToken(oAuth2AccessToken);
+//                }
+//            }
+//        }
+//    }
 
     @PostMapping("/otp")
     public ResponseEntity<?> sendEmailOtp(@RequestBody EmailRequest req) {
