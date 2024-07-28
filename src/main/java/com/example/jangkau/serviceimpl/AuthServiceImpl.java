@@ -138,33 +138,6 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
-//    @Override
-//    public void logout(Principal principal) {
-//        User user = userRepository.findByUsername(principal.getName());
-//        if (user == null) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-//        }
-//
-//        String url = authUrl + "/oauth/token?token=" + user.getVerifyToken();
-//        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-//        params.add("client_id", "my-client-web");
-//        params.add("client_secret", "password");
-//        params.add("token", user.getVerifyToken());
-//        params.add("token_type_hint", "access_token");
-//
-//        ResponseEntity<Void> response = restTemplateBuilder.build().postForEntity(url, params, Void.class);
-//
-//        if (response.getStatusCode() != HttpStatus.OK) {
-//            throw new ResponseStatusException(response.getStatusCode(), "Logout failed");
-//        }
-//
-//        user.setExpiredVerifyToken(new Date(System.currentTimeMillis() + 1000));
-//        userRepository.save(user);
-//
-//        SecurityContextHolder.clearContext();
-//    }
-
-
     @Override
     public Object sendEmailOtp(EmailRequest request, String subject) {
         validationService.validate(request);
