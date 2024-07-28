@@ -5,19 +5,11 @@ import com.example.jangkau.dto.base.BaseResponse;
 import com.example.jangkau.services.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
-import java.util.Map;
 
 @Tag(name = "Auth")
 @RestController
@@ -26,15 +18,6 @@ public class AuthController {
 
     @Autowired
     private AuthService authService;
-
-    @Value("${BASEURL}")
-    private String authUrl;
-
-    @Autowired
-    private RestTemplateBuilder restTemplateBuilder;
-
-    @Autowired
-    private TokenStore tokenStore;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
