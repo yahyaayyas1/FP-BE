@@ -27,18 +27,14 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Cookie;
 import java.security.Principal;
 import java.util.*;
 
@@ -56,6 +52,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private ValidationService validationService;
+
+    @Autowired
+    private TokenStore tokenStore;
 
     @Value("${BASEURL}")
     private String baseUrl;
@@ -105,7 +104,8 @@ public class AuthServiceImpl implements AuthService {
         return userRepository.save(user);
     }
 
-    public LoginResponse login(LoginRequest request) {
+    @Override
+    public LoginResponse login(LoginRequest request, HttpServletResponse response) {
         validationService.validate(request);
         User checkUser = userRepository.findByUsername(request.getUsername());
 
@@ -126,44 +126,60 @@ public class AuthServiceImpl implements AuthService {
                 "&grant_type=password" +
                 "&client_id=my-client-web" +
                 "&client_secret=password";
-        ResponseEntity<Map> response = restTemplateBuilder.build().exchange(url, HttpMethod.POST, null, new
+        ResponseEntity<Map> apiResponse = restTemplateBuilder.build().exchange(url, HttpMethod.POST, null, new
                 ParameterizedTypeReference<Map>() {
                 }
         );
 
-        if (response.getStatusCode() == HttpStatus.OK) {
-            return authMapper.toLoginResponse(response, checkUser);
+        if (apiResponse.getStatusCode() == HttpStatus.OK) {
+            LoginResponse loginResponse = authMapper.toLoginResponse(apiResponse, checkUser);
+
+            Cookie refreshTokenCookie = new Cookie("refresh_token", (String) loginResponse.getRefreshToken());
+            refreshTokenCookie.setHttpOnly(true);
+            refreshTokenCookie.setSecure(true);
+            refreshTokenCookie.setPath("/");
+            refreshTokenCookie.setMaxAge(60 * 60 * 24 * 7);
+
+            response.addCookie(refreshTokenCookie);
+
+            return loginResponse;
         } else {
-            throw new ResponseStatusException(response.getStatusCode(), "User not found");
+            throw new ResponseStatusException(apiResponse.getStatusCode(), "User not found");
         }
     }
 
-//    @Override
-//    public void logout(Principal principal) {
-//        User user = userRepository.findByUsername(principal.getName());
-//        if (user == null) {
+//    public LoginResponse login(LoginRequest request) {
+//        validationService.validate(request);
+//        User checkUser = userRepository.findByUsername(request.getUsername());
+//
+//        if ((checkUser != null) && (encoder.matches(request.getPassword(), checkUser.getPassword()))) {
+//            if (!checkUser.isEnabled()) {
+//                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User is not enabled");
+//            }
+//        }
+//        if (checkUser == null) {
 //            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
 //        }
-//
-//        String url = authUrl + "/oauth/token?token=" + user.getVerifyToken();
-//        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-//        params.add("client_id", "my-client-web");
-//        params.add("client_secret", "password");
-//        params.add("token", user.getVerifyToken());
-//        params.add("token_type_hint", "access_token");
-//
-//        ResponseEntity<Void> response = restTemplateBuilder.build().postForEntity(url, params, Void.class);
-//
-//        if (response.getStatusCode() != HttpStatus.OK) {
-//            throw new ResponseStatusException(response.getStatusCode(), "Logout failed");
+//        if (!(encoder.matches(request.getPassword(), checkUser.getPassword()))) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong password");
 //        }
 //
-//        user.setExpiredVerifyToken(new Date(System.currentTimeMillis() + 1000));
-//        userRepository.save(user);
+//        String url = baseUrl + "/oauth/token?username=" + checkUser.getUsername() +
+//                "&password=" + request.getPassword() +
+//                "&grant_type=password" +
+//                "&client_id=my-client-web" +
+//                "&client_secret=password";
+//        ResponseEntity<Map> response = restTemplateBuilder.build().exchange(url, HttpMethod.POST, null, new
+//                ParameterizedTypeReference<Map>() {
+//                }
+//        );
 //
-//        SecurityContextHolder.clearContext();
+//        if (response.getStatusCode() == HttpStatus.OK) {
+//            return authMapper.toLoginResponse(response, checkUser);
+//        } else {
+//            throw new ResponseStatusException(response.getStatusCode(), "User not found");
+//        }
 //    }
-
 
     @Override
     public Object sendEmailOtp(EmailRequest request, String subject) {
@@ -174,7 +190,7 @@ public class AuthServiceImpl implements AuthService {
         if (found == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Email Not Found");
         }
-//        String template = subject.equalsIgnoreCase("Register") ? emailTemplate.getRegisterTemplate() : emailTemplate.getResetPassword();
+
         String template = emailTemplate.getResetPassword();
         if (StringUtils.isEmpty(found.getOtp())) {
             User search;

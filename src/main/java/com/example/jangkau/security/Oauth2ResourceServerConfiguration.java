@@ -8,6 +8,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 
+
 @Configuration
 @EnableResourceServer
 @EnableGlobalMethodSecurity(securedEnabled = true) //secure definition
@@ -17,27 +18,20 @@ public class Oauth2ResourceServerConfiguration extends ResourceServerConfigurerA
             "/error**",
             "/auth/**",
             "/auth",
+            "/refresh-token",
             "/oauth/authorize**",
             "/api-docs/**",
             "/swagger-ui/**",
             "/api-docs/**",
             "/swagger-resources/**",
-            "/api/**",
-            "/api",
             "/api-contract"
     };
 
-    /**
-     * Manage resource server.
-     */
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
         super.configure(resources);
     }
 
-    /**
-     * Manage endpoints.
-     */
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.cors()
@@ -48,7 +42,6 @@ public class Oauth2ResourceServerConfiguration extends ResourceServerConfigurerA
                 .authorizeRequests()
                 .antMatchers(WHITE_LIST_URL)
                 .permitAll()
-                .antMatchers(HttpMethod.PUT, "/logout").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .antMatchers(HttpMethod.POST, "/transactions").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .antMatchers(HttpMethod.POST, "/bank-accounts").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .antMatchers(HttpMethod.POST, "/saved-accounts").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
@@ -69,4 +62,3 @@ public class Oauth2ResourceServerConfiguration extends ResourceServerConfigurerA
                 .permitAll();
     }
 }
-
