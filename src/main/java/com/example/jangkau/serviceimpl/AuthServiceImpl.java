@@ -135,11 +135,11 @@ public class AuthServiceImpl implements AuthService {
             LoginResponse loginResponse = authMapper.toLoginResponse(apiResponse, checkUser);
 
             Cookie refreshTokenCookie = new Cookie("refresh_token", (String) loginResponse.getRefreshToken());
-            refreshTokenCookie.setHttpOnly(true);
+            refreshTokenCookie.setHttpOnly(false);
             refreshTokenCookie.setSecure(true);
             refreshTokenCookie.setPath("/");
             refreshTokenCookie.setMaxAge(60 * 60 * 24 * 7);
-            refreshTokenCookie.setComment("SameSite=None; Secure");
+            refreshTokenCookie.setComment("SameSite=none");
 
             response.addCookie(refreshTokenCookie);
 
@@ -152,11 +152,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void logout(HttpServletResponse response) {
         Cookie refreshTokenCookie = new Cookie("refresh_token", null);
-        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setHttpOnly(false);
         refreshTokenCookie.setSecure(true);
         refreshTokenCookie.setPath("/");
         refreshTokenCookie.setMaxAge(0);
-        refreshTokenCookie.setComment("SameSite=None; Secure");
+        refreshTokenCookie.setComment("SameSite=none");
 
         response.addCookie(refreshTokenCookie);
     }
