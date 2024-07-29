@@ -139,6 +139,7 @@ public class AuthServiceImpl implements AuthService {
             refreshTokenCookie.setSecure(true);
             refreshTokenCookie.setPath("/");
             refreshTokenCookie.setMaxAge(60 * 60 * 24 * 7);
+            refreshTokenCookie.setComment("SameSite=None; Secure");
 
             response.addCookie(refreshTokenCookie);
 
@@ -146,6 +147,18 @@ public class AuthServiceImpl implements AuthService {
         } else {
             throw new ResponseStatusException(apiResponse.getStatusCode(), "User not found");
         }
+    }
+
+    @Override
+    public void logout(HttpServletResponse response) {
+        Cookie refreshTokenCookie = new Cookie("refresh_token", null);
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setSecure(true);
+        refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setMaxAge(0);
+        refreshTokenCookie.setComment("SameSite=None; Secure");
+
+        response.addCookie(refreshTokenCookie);
     }
 
     @Override
