@@ -31,21 +31,11 @@ public class AuthController {
         return ResponseEntity.ok(baseResponse);
     }
 
-//    @PostMapping("/logout")
-//    public void logout(HttpServletRequest request, Authentication authentication) {
-//        String token = null;
-//        Enumeration<String> headers = request.getHeaders("Authorization");
-//        while (headers.hasMoreElements()) {
-//            String value = headers.nextElement();
-//            if ((value.toLowerCase().startsWith("bearer"))) {
-//                token = value.substring("bearer".length()).trim();
-//                OAuth2AccessToken oAuth2AccessToken = tokenStore.readAccessToken(token);
-//                if (oAuth2AccessToken != null) {
-//                    tokenStore.removeAccessToken(oAuth2AccessToken);
-//                }
-//            }
-//        }
-//    }
+    @PostMapping("/logout")
+    public ResponseEntity<BaseResponse<String>> logout(HttpServletResponse response) {
+        authService.logout(response);
+        return ResponseEntity.ok(BaseResponse.success("Logged out successfully", "Success Logout"));
+    }
 
     @PostMapping("/otp")
     public ResponseEntity<?> sendEmailOtp(@RequestBody EmailRequest req) {
