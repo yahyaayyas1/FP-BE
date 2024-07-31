@@ -26,7 +26,8 @@ public class Oauth2ResourceServerConfiguration extends ResourceServerConfigurerA
             "/api-docs/**",
             "/swagger-resources/**",
             "/api-contract",
-            "/refresh-token"
+            "/refresh-token",
+            "/refresh-token/**"
     };
 
     @Override
