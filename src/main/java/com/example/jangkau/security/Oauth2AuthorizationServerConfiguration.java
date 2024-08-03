@@ -58,5 +58,4 @@ public class Oauth2AuthorizationServerConfiguration extends AuthorizationServerC
                 .accessTokenConverter(accessTokenConverter)
                 .userDetailsService(userDetailsService);
     }
-
 }
