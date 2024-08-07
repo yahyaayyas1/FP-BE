@@ -17,7 +17,7 @@ public class CorsOriginConfiguration implements Filter {
 
     private static final List<String> ALLOWED_ORIGINS = Arrays.asList(
             "http://localhost:5173",
-//            "https://jangkau-delta.vercel.app",
+            "https://jangkau-delta.vercel.app/**",
             "*"
     );
 
